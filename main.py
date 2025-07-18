@@ -1,6 +1,8 @@
-import streamlit as st
+print("Hello, World!")
 
-st.title("Hello from Streamlit & Jenkins!")
-st.write("This app was launched from a Jenkins pipeline.")
-if st.button("Click Me"):
-    st.success("Button Clicked!")
+a = 5
+b = 7
+sum = a + b
+
+print("The sum of", a, "and", b, "is", sum)
+
