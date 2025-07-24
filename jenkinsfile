@@ -1,0 +1,48 @@
+pipeline {
+    agent any
+
+    environment {
+        STREAMLIT_PORT = '8501'
+    }
+
+    stages {
+        stage('Install Streamlit') {
+            steps {
+                sh '''
+                pip install --break-system-packages streamlit
+                '''
+            }
+        }
+
+        stage('Clone Streamlit App Repo') {
+            steps {
+                git branch: 'main', url: 'https://github.com/hassan-sajawal/second_Project.git'
+            }
+        }
+
+        stage('Run Streamlit App') {
+            steps {
+                sh '''
+                nohup ~/.local/bin/streamlit run app.py --server.port=$STREAMLIT_PORT --server.address=0.0.0.0 > streamlit.log 2>&1 &
+                echo "Streamlit app started"
+                '''
+            }
+        }
+
+        stage('Show Server IP') {
+            steps {
+                sh '''
+                echo "Fetching public server IP..."
+                IP=$(curl -s ifconfig.me)
+                echo "🌐 Access your Streamlit app at: http://$IP:$STREAMLIT_PORT"
+                '''
+            }
+        }
+
+        stage('Keep Alive (Optional)') {
+            steps {
+                sh 'sleep 60'
+            }
+        }
+    }
+}
